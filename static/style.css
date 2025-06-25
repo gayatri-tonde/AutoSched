@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 100vh;
+    width:100%;
+}
+
+form {
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    max-width: 90%;
+    height: 100%;
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.left-panel {
+    flex: 1;
+    padding: 40px 30px;
+    background: linear-gradient(to bottom right, #4facfe, #00f2fe);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-panel h1 {
+    margin-bottom: 10px;
+    font-size: 36px;
+}
+
+.left-panel h4 {
+    margin: 0;
+    font-weight: 300;
+}
+
+.left-panel h5 {
+    margin-top: 20px;
+    font-weight: 200;
+    line-height: 1.6;
+}
+
+.right-panel {
+    flex: 2;
+    padding: 40px 30px;
+    background: white;
+}
+
+.right-panel label {
+    justify-content: space-between;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.right-panel input,
+.right-panel select {
+    width: 20%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    outline: none;
+}
+
+#subjects > div {
+    margin-bottom: 15px;
+}
+
+.buttons {
+    background: linear-gradient(to right, #5b6dff, #74ebd5);
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    
+    transition: background 0.3s ease;
+}
+
+button[type="button"]:hover,
+button[type="submit"]:hover {
+    background: linear-gradient(to right, #74ebd5, #5b6dff);
+}
+
+.day-button {
+    background-color: #e0e0e0;
+    border: none;
+    color: #333;
+    padding: 10px 16px;
+    border-radius: 25px;
+    margin: 4px 5px 10px 0;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.day-button.selected {
+    background: linear-gradient(to right, #5b6dff, #74ebd5);
+    color: white;
+    box-shadow: 0 0 8px rgba(91, 109, 255, 0.6);
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+}
+
+
+
+
+

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generated Timetables</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='timetable.css') }}">
+</head>
+<body>
+    <h2>Generated Timetables</h2>
+
+    {% for timetable in timetables %}
+    <div class="timetable-section">
+        <h3>Section {{ loop.index }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th class="title">Day</th>
+                    {% for i in range(timetable[0]|length) %}
+                    <th class="title">Slot {{ i+1 }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(timetable|length) %}
+                <tr>
+                    <td class="title">{{ working_days[i] }}</td>
+                    {% for slot in timetable[i] %}
+                        {% if "Break" in slot %}
+                            <td class="break">{{ slot }}</td>
+                        {% elif "Free" in slot %}
+                            <td class="free">{{ slot }}</td>
+                        {% else %}
+                            <td class="period">{{ slot }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+</body>
+</html>
