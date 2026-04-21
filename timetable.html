@@ -1,43 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Generated Timetables</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='timetable.css') }}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoSched – Generated Timetables</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2236;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --break-bg: #1e2d3d;
+    --break-text: #38bdf8;
+    --free-bg: #1a1f2e;
+    --free-text: #475569;
+    --period-bg: #0f2340;
+    --period-text: #93c5fd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 0%, rgba(0,212,255,0.05) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 100%, rgba(124,58,237,0.05) 0%, transparent 60%);
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 2.5rem 2rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: linear-gradient(135deg, rgba(0,212,255,0.03), rgba(124,58,237,0.03));
+  }
+
+  .logo-area h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.6rem;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .logo-area p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.55rem 1.2rem;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-primary:hover { background: #33ddff; transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .stat-chip span { color: var(--text); font-weight: 600; }
+
+  /* ── CONFLICT BANNER ── */
+  .conflict-banner {
+    margin: 1.5rem 2rem 0;
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 10px;
+    padding: 0.9rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .conflict-banner .icon { font-size: 1.1rem; margin-top: 0.1rem; }
+  .conflict-banner strong { color: var(--warn); display: block; margin-bottom: 0.25rem; }
+  .conflict-banner ul { padding-left: 1.2rem; color: var(--muted); line-height: 1.8; }
+
+  /* ── SECTION TABS ── */
+  .section-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1.5rem 2rem 0;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    background: var(--surface);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .tab.active {
+    background: var(--surface2);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* ── TIMETABLE WRAPPER ── */
+  .main {
+    padding: 0 2rem 2rem;
+  }
+
+  .timetable-section {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 0 12px 12px 12px;
+    overflow: hidden;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .timetable-section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TABLE ── */
+  .table-wrapper {
+    overflow-x: auto;
+    padding: 1.5rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+
+  td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    text-align: center;
+    white-space: nowrap;
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  td:first-child {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: left;
+    padding-left: 1rem;
+    background: var(--surface);
+    border-right: 2px solid var(--border);
+    min-width: 100px;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td.break-slot {
+    background: var(--break-bg);
+    color: var(--break-text);
+    font-size: 0.78rem;
+    font-style: italic;
+  }
+
+  td.free-slot {
+    background: var(--free-bg);
+    color: var(--free-text);
+    font-size: 0.78rem;
+  }
+
+  td.period-slot {
+    background: var(--period-bg);
+    color: var(--period-text);
+    font-weight: 500;
+  }
+
+  td.period-slot:hover {
+    background: rgba(0,212,255,0.12);
+    cursor: default;
+  }
+
+  /* conflict highlight */
+  td.conflict-slot {
+    background: rgba(245,158,11,0.12) !important;
+    color: var(--warn) !important;
+    outline: 1px solid rgba(245,158,11,0.4);
+  }
+
+  td.conflict-slot::after {
+    content: '⚠';
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    font-size: 0.6rem;
+    opacity: 0.7;
+  }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    body { background: white; color: black; }
+    header, .stats-bar, .header-actions, .section-tabs, .conflict-banner { display: none !important; }
+    .timetable-section { display: block !important; border: 1px solid #ccc; margin-bottom: 2rem; page-break-inside: avoid; }
+    th { background: #f1f5f9; color: #334155; }
+    td { color: #1e293b !important; background: white !important; }
+    td:first-child { background: #f8fafc !important; }
+    td.break-slot { background: #e0f2fe !important; }
+    td.free-slot { background: #f8fafc !important; color: #94a3b8 !important; }
+    .main { padding: 0; }
+    .table-wrapper { padding: 0; }
+  }
+</style>
 </head>
 <body>
-    <h2>Generated Timetables</h2>
 
-    {% for timetable in timetables %}
-    <div class="timetable-section">
-        <h3>Section {{ loop.index }}</h3>
+<!-- HEADER -->
+<header>
+  <div class="logo-area">
+    <h1>⚡ AutoSched</h1>
+    <p>Intelligent Timetable Generator — Generated Schedule</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="window.print()">🖨️ Print / Save PDF</button>
+    <button class="btn btn-outline" onclick="exportCSV()">📥 Export CSV</button>
+    <button class="btn btn-primary" onclick="window.history.back()">← Back</button>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar">
+  <!-- populated by JS -->
+</div>
+
+<!-- CONFLICT BANNER -->
+<div class="conflict-banner" id="conflictBanner" style="display:none">
+  <div class="icon">⚠️</div>
+  <div>
+    <strong>Schedule Warnings Detected</strong>
+    <ul id="conflictList"></ul>
+  </div>
+</div>
+
+<!-- SECTION TABS -->
+<div class="section-tabs" id="sectionTabs"></div>
+
+<!-- MAIN -->
+<div class="main" id="mainContent"></div>
+
+
+
+<script>
+// ── PARSE TIMETABLE DATA FROM JINJA ──
+// This reads the Jinja-rendered timetable data from the page
+// We inject it as a JS variable via Flask template
+const timetableData = {{ timetables | tojson }};
+const workingDays = {{ working_days | tojson }};
+
+// ── DETECT CONFLICTS ──
+function detectConflicts(timetables) {
+  const warnings = [];
+  timetables.forEach((tt, secIdx) => {
+    tt.forEach((daySlots, dayIdx) => {
+      const periods = daySlots.filter(s => !s.includes('Break') && !s.includes('Free'));
+      // consecutive same subject
+      for (let i = 0; i < daySlots.length - 1; i++) {
+        const a = daySlots[i], b = daySlots[i+1];
+        if (!a.includes('Break') && !a.includes('Free') && a === b) {
+          warnings.push({
+            section: secIdx + 1,
+            day: workingDays[dayIdx],
+            msg: `Section ${secIdx+1}: "${a}" appears consecutively on ${workingDays[dayIdx]} (slots ${i+1} & ${i+2})`,
+            slotA: i, slotB: i+1, dayIdx, secIdx
+          });
+        }
+      }
+    });
+  });
+  return warnings;
+}
+
+// ── RENDER STATS ──
+function renderStats() {
+  const totalSections = timetableData.length;
+  const slotsPerDay = timetableData[0][0].length;
+  const totalDays = workingDays.length;
+  const allSlots = timetableData.flatMap(tt => tt.flatMap(d => d));
+  const periods = allSlots.filter(s => !s.includes('Break') && !s.includes('Free')).length;
+  const breaks = allSlots.filter(s => s.includes('Break')).length;
+
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-chip">📚 Sections: <span>${totalSections}</span></div>
+    <div class="stat-chip">📅 Days: <span>${totalDays}</span></div>
+    <div class="stat-chip">⏱️ Slots/Day: <span>${slotsPerDay}</span></div>
+    <div class="stat-chip">🎓 Total Periods: <span>${periods}</span></div>
+    <div class="stat-chip">☕ Total Breaks: <span>${breaks}</span></div>
+  `;
+}
+
+// ── RENDER TIMETABLE ──
+function renderTimetables() {
+  const conflicts = detectConflicts(timetableData);
+  const tabsEl = document.getElementById('sectionTabs');
+  const mainEl = document.getElementById('mainContent');
+
+  // show conflict banner
+  if (conflicts.length > 0) {
+    const banner = document.getElementById('conflictBanner');
+    const list = document.getElementById('conflictList');
+    banner.style.display = 'flex';
+    list.innerHTML = conflicts.map(c => `<li>${c.msg}</li>`).join('');
+  }
+
+  // build tabs & sections
+  timetableData.forEach((tt, secIdx) => {
+    // tab
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (secIdx === 0 ? ' active' : '');
+    tab.textContent = `Section ${secIdx + 1}`;
+    tab.onclick = () => switchTab(secIdx);
+    tabsEl.appendChild(tab);
+
+    // build conflict slot set for this section
+    const conflictSlots = new Set();
+    conflicts.filter(c => c.secIdx === secIdx).forEach(c => {
+      conflictSlots.add(`${c.dayIdx}-${c.slotA}`);
+      conflictSlots.add(`${c.dayIdx}-${c.slotB}`);
+    });
+
+    // section div
+    const section = document.createElement('div');
+    section.className = 'timetable-section' + (secIdx === 0 ? ' active' : '');
+    section.id = `section-${secIdx}`;
+
+    // table
+    const numSlots = tt[0].length;
+    let headers = '<th>Day</th>';
+    for (let i = 0; i < numSlots; i++) headers += `<th>Slot ${i+1}</th>`;
+
+    let rows = '';
+    tt.forEach((daySlots, dayIdx) => {
+      rows += `<tr><td>${workingDays[dayIdx]}</td>`;
+      daySlots.forEach((slot, slotIdx) => {
+        const isConflict = conflictSlots.has(`${dayIdx}-${slotIdx}`);
+        let cls = 'period-slot';
+        if (slot.includes('Break')) cls = 'break-slot';
+        else if (slot.includes('Free')) cls = 'free-slot';
+        if (isConflict) cls += ' conflict-slot';
+        rows += `<td class="${cls}">${slot}</td>`;
+      });
+      rows += '</tr>';
+    });
+
+    section.innerHTML = `
+      <div class="table-wrapper">
         <table>
-            <thead>
-                <tr>
-                    <th class="title">Day</th>
-                    {% for i in range(timetable[0]|length) %}
-                    <th class="title">Slot {{ i+1 }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in range(timetable|length) %}
-                <tr>
-                    <td class="title">{{ working_days[i] }}</td>
-                    {% for slot in timetable[i] %}
-                        {% if "Break" in slot %}
-                            <td class="break">{{ slot }}</td>
-                        {% elif "Free" in slot %}
-                            <td class="free">{{ slot }}</td>
-                        {% else %}
-                            <td class="period">{{ slot }}</td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
+          <thead><tr>${headers}</tr></thead>
+          <tbody>${rows}</tbody>
         </table>
-    </div>
-    {% endfor %}
+      </div>`;
+    mainEl.appendChild(section);
+  });
+}
+
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelectorAll('.timetable-section').forEach((s, i) => s.classList.toggle('active', i === idx));
+}
+
+// ── EXPORT CSV ──
+function exportCSV() {
+  let csv = '';
+  timetableData.forEach((tt, secIdx) => {
+    csv += `Section ${secIdx + 1}\n`;
+    csv += 'Day,' + tt[0].map((_, i) => `Slot ${i+1}`).join(',') + '\n';
+    tt.forEach((daySlots, dayIdx) => {
+      csv += `${workingDays[dayIdx]},${daySlots.map(s => `"${s}"`).join(',')}\n`;
+    });
+    csv += '\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'autosched_timetable.csv';
+  a.click();
+}
+
+// ── INIT ──
+renderStats();
+renderTimetables();
+</script>
 </body>
 </html>
