@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #74ebd5, #9face6);
+    background: #f8fafc; /* light background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,16 +26,16 @@ form {
     max-width: 1100px;
     width: 100%;
     background-color: white;
-    border-radius: 16px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
 }
 
 /* ── LEFT PANEL ── */
 .left-panel {
     flex: 1;
     padding: 40px 30px;
-    background: linear-gradient(to bottom right, #4facfe, #00f2fe);
+    background: #1e3a8a; /* formal navy */
     color: white;
     display: flex;
     flex-direction: column;
@@ -46,15 +46,16 @@ form {
 }
 
 .left-panel img {
-    width: 180px;
-    height: 180px;
+    width: 140px;
+    height: 140px;
     object-fit: contain;
 }
 
 .left-panel h4 {
     font-weight: 300;
     font-size: 14px;
-    line-height: 1.7;
+    line-height: 1.6;
+    opacity: 0.9;
 }
 
 /* ── RIGHT PANEL ── */
@@ -67,36 +68,36 @@ form {
 
 .right-panel h2 {
     margin-bottom: 20px;
-    color: #333;
-    font-size: 22px;
+    color: #0f172a;
+    font-size: 20px;
 }
 
 /* ── FORM LABELS ── */
 .right-panel label {
     display: inline-block;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 14px;
     margin-top: 12px;
     margin-bottom: 4px;
-    color: #444;
+    color: #334155;
 }
 
 /* ── INPUTS ── */
 .right-panel input {
     padding: 10px 12px;
     margin-bottom: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    border-radius: 6px;
+    border: 1px solid #cbd5f5;
     font-size: 14px;
     outline: none;
     transition: border-color 0.2s;
 }
 
 .right-panel input:focus {
-    border-color: #5b6dff;
+    border-color: #1e3a8a;
 }
 
-/* inputs that sit beside labels inline */
+/* inline inputs */
 .right-panel label input {
     margin-left: 8px;
     width: 160px;
@@ -109,9 +110,9 @@ form {
     gap: 8px;
     margin-bottom: 12px;
     padding: 12px;
-    background: #f8f9ff;
-    border-radius: 10px;
-    border: 1px solid #e0e4ff;
+    background: #f1f5f9;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
 }
 
 #subjects > div input {
@@ -122,52 +123,49 @@ form {
 
 /* ── BUTTONS ── */
 .buttons {
-    background: linear-gradient(to right, #5b6dff, #74ebd5);
+    background: #1e3a8a;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 25px;
-    font-weight: bold;
+    border-radius: 6px;
+    font-weight: 600;
     font-size: 14px;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.1s;
+    transition: background 0.2s;
 }
 
 .buttons:hover {
-    background: linear-gradient(to right, #74ebd5, #5b6dff);
-    transform: translateY(-1px);
+    background: #1d4ed8;
 }
 
 /* ── DAY BUTTONS ── */
 .day-button {
-    background-color: #e0e0e0;
+    background-color: #e2e8f0;
     border: none;
-    color: #333;
+    color: #334155;
     padding: 8px 14px;
-    border-radius: 25px;
+    border-radius: 6px;
     margin: 4px 4px 10px 0;
     cursor: pointer;
     font-weight: 500;
     font-size: 13px;
-    transition: all 0.3s ease;
+    transition: all 0.2s;
 }
 
 .day-button.selected {
-    background: linear-gradient(to right, #5b6dff, #74ebd5);
+    background: #1e3a8a;
     color: white;
-    box-shadow: 0 0 8px rgba(91, 109, 255, 0.5);
 }
 
 .day-button:hover {
-    background: linear-gradient(to right, #74ebd5, #5b6dff);
-    color: white;
+    background: #cbd5f5;
 }
 
-/* ── SECTIONS HEADING ── */
+/* ── SECTION HEADINGS ── */
 h3 {
     margin: 16px 0 10px;
-    font-size: 16px;
-    color: #333;
+    font-size: 15px;
+    color: #0f172a;
 }
 
 /* ── RESPONSIVE ── */
