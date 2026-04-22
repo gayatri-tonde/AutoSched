@@ -1,0 +1,190 @@
+/* ── GLOBAL ── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 40px 20px;
+}
+
+form {
+    width: 100%;
+}
+
+/* ── LAYOUT ── */
+.container {
+    display: flex;
+    max-width: 1100px;
+    width: 100%;
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+    flex: 1;
+    padding: 40px 30px;
+    background: linear-gradient(to bottom right, #4facfe, #00f2fe);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.left-panel img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+}
+
+.left-panel h4 {
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+    flex: 2;
+    padding: 40px 30px;
+    background: white;
+    overflow-y: auto;
+}
+
+.right-panel h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 22px;
+}
+
+/* ── FORM LABELS ── */
+.right-panel label {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    color: #444;
+}
+
+/* ── INPUTS ── */
+.right-panel input {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.right-panel input:focus {
+    border-color: #5b6dff;
+}
+
+/* inputs that sit beside labels inline */
+.right-panel label input {
+    margin-left: 8px;
+    width: 160px;
+}
+
+/* ── SUBJECTS SECTION ── */
+#subjects > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: #f8f9ff;
+    border-radius: 10px;
+    border: 1px solid #e0e4ff;
+}
+
+#subjects > div input {
+    flex: 1;
+    min-width: 120px;
+    margin-bottom: 0;
+}
+
+/* ── BUTTONS ── */
+.buttons {
+    background: linear-gradient(to right, #5b6dff, #74ebd5);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s;
+}
+
+.buttons:hover {
+    background: linear-gradient(to right, #74ebd5, #5b6dff);
+    transform: translateY(-1px);
+}
+
+/* ── DAY BUTTONS ── */
+.day-button {
+    background-color: #e0e0e0;
+    border: none;
+    color: #333;
+    padding: 8px 14px;
+    border-radius: 25px;
+    margin: 4px 4px 10px 0;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.day-button.selected {
+    background: linear-gradient(to right, #5b6dff, #74ebd5);
+    color: white;
+    box-shadow: 0 0 8px rgba(91, 109, 255, 0.5);
+}
+
+.day-button:hover {
+    background: linear-gradient(to right, #74ebd5, #5b6dff);
+    color: white;
+}
+
+/* ── SECTIONS HEADING ── */
+h3 {
+    margin: 16px 0 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left-panel {
+        padding: 30px 20px;
+    }
+
+    .right-panel {
+        padding: 30px 20px;
+    }
+
+    .right-panel label input {
+        width: 120px;
+    }
+}

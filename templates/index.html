@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSched – Timetable Generator</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="AutoSched Logo">
+            <h4>An Intelligent Timetable Generator that creates conflict-free schedules for multiple sections. It automates subject, faculty, and break placement based on user-defined inputs.</h4>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+            <h2>Generate Timetable</h2>
+
+            <form method="POST" action="/generate">
+
+                <label>Start Time: <input type="time" name="start_time" required></label>
+                <label>End Time: <input type="time" name="end_time" required></label><br>
+
+                <label>Number of Periods: <input type="number" name="num_periods" min="1" required></label><br>
+
+                <label>Number of Breaks: <input type="number" name="num_breaks" min="0" required></label>
+                <label>Break Durations: <input name="break_durations" placeholder="e.g. 10,30" required></label><br>
+
+                <label>Number of Classrooms: <input type="number" name="classrooms" min="1" required></label>
+                <label>Number of Sections: <input type="number" name="sections" min="1" placeholder="in department" required></label><br>
+
+                <label>Working Days:</label><br>
+                <button type="button" class="day-button" data-day="Monday">Monday</button>
+                <button type="button" class="day-button" data-day="Tuesday">Tuesday</button>
+                <button type="button" class="day-button" data-day="Wednesday">Wednesday</button>
+                <button type="button" class="day-button" data-day="Thursday">Thursday</button>
+                <button type="button" class="day-button" data-day="Friday">Friday</button>
+                <button type="button" class="day-button" data-day="Saturday">Saturday</button>
+                <input type="hidden" name="working_days" id="working-days" value=""><br>
+
+                <h3>Subjects</h3>
+                <div id="subjects">
+                    <div>
+                        <input name="subject_name_1" placeholder="Subject Name" required>
+                        <input name="subject_freq_1" type="number" placeholder="Frequency" min="1" required>
+                        <input name="subject_dur_1" type="number" placeholder="Duration (min)" min="1" required>
+                        <input name="subject_faculty_1" placeholder="Faculty Name" required>
+                    </div>
+                </div>
+
+                <br>
+                <button type="button" class="buttons" onclick="addSubject()">+ Add Subject</button>
+                &nbsp;
+                <button type="submit" class="buttons">Generate Timetable</button>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let subjectCount = 1;
+
+        function addSubject() {
+            subjectCount++;
+            const container = document.getElementById("subjects");
+            const div = document.createElement("div");
+            div.innerHTML = `
+                <input name="subject_name_${subjectCount}" placeholder="Subject Name" required>
+                <input name="subject_freq_${subjectCount}" type="number" placeholder="Frequency" min="1" required>
+                <input name="subject_dur_${subjectCount}" type="number" placeholder="Duration (min)" min="1" required>
+                <input name="subject_faculty_${subjectCount}" placeholder="Faculty Name" required>
+            `;
+            container.appendChild(div);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('.day-button');
+            const workingDaysInput = document.getElementById('working-days');
+            const selectedDays = new Set();
+
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const day = button.getAttribute('data-day');
+                    if (selectedDays.has(day)) {
+                        selectedDays.delete(day);
+                        button.classList.remove('selected');
+                    } else {
+                        selectedDays.add(day);
+                        button.classList.add('selected');
+                    }
+                    workingDaysInput.value = Array.from(selectedDays).join(',');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
